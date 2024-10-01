@@ -10,6 +10,8 @@ class Bird:
         self.rect.center = (screen_width // 4, screen_height // 2)
         self.gravity = 0
         self.lift = -10
+        self.screen_width = screen_width
+        self.screen_height = screen_height
 
     def update(self, screen_height: int):
         self.gravity += 1  # Simula la gravità
@@ -19,3 +21,7 @@ class Bird:
 
     def flap(self):
         self.gravity = self.lift
+
+    def reset(self):
+        # Ripristina la posizione iniziale dell'uccellino
+        self.rect.center = (50, self.screen_height // 2)  # Imposta la posizione iniziale
