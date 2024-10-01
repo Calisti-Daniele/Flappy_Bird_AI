@@ -23,19 +23,15 @@ message_image = pygame.image.load('sprites/message.png')  # Immagine di messaggi
 
 # Crea l'uccellino e le pipe
 bird = Bird(bird_image, SCREEN_WIDTH, SCREEN_HEIGHT)
-pipes = [
-    Pipe(pipe_image, SCREEN_WIDTH, SCREEN_HEIGHT, False),
-    Pipe(pipe_image, SCREEN_WIDTH, SCREEN_HEIGHT, True)
-]
+pipes = [Pipe(pipe_image, SCREEN_WIDTH, SCREEN_HEIGHT, gap_height=150)]
 
-# Aggiungi pipe per il gioco
-for _ in range(2):  # Aggiungi più pipe per il livello iniziale
-    pipes.append(Pipe(pipe_image, SCREEN_WIDTH, SCREEN_HEIGHT, False))
-    pipes.append(Pipe(pipe_image, SCREEN_WIDTH, SCREEN_HEIGHT, True))
-
-# Variabile per gestire il "game over"
+# Variabili per gestire il "game over"
 game_over = False
 game_started = False  # Variabile per gestire l'inizio del gioco
+
+# Variabili per la generazione delle pipe
+last_pipe_generation_time = pygame.time.get_ticks()  # Tempo dell'ultima generazione
+pipe_generation_interval = 5000  # 5 secondi in millisecondi
 
 # Definisci il loop principale del gioco
 running = True
@@ -54,7 +50,7 @@ while running:
     if not game_started:
         # Mostra l'immagine di messaggio prima dell'inizio del gioco
         screen.blit(message_image, (
-        SCREEN_WIDTH // 2 - message_image.get_width() // 2, SCREEN_HEIGHT // 2 - message_image.get_height() // 2))
+            SCREEN_WIDTH // 2 - message_image.get_width() // 2, SCREEN_HEIGHT // 2 - message_image.get_height() // 2))
     else:
         if not game_over:
             # Aggiorna e mostra l'uccellino
@@ -76,6 +72,12 @@ while running:
 
             # Aggiungi l'immagine di base
             screen.blit(base_image, (0, SCREEN_HEIGHT - base_image.get_height()))
+
+            # Gestisci la generazione delle pipe
+            current_time = pygame.time.get_ticks()  # Ottieni il tempo corrente
+            if current_time - last_pipe_generation_time > pipe_generation_interval:
+                pipes.append(Pipe(pipe_image, SCREEN_WIDTH, SCREEN_HEIGHT, gap_height=150))
+                last_pipe_generation_time = current_time  # Aggiorna il tempo dell'ultima generazione
 
         else:
             # Mostra l'immagine di Game Over
